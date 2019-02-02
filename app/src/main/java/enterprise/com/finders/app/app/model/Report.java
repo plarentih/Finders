@@ -13,17 +13,27 @@ public class Report implements Serializable{
     private double latitude;
     private double longitude;
     private String urlPhoto;
+    private int zipcode;
 
     public Report() {
     }
 
-    public Report(String key, String title, String description, double latitude, double longitude, String urlPhoto) {
+    public int getZipcode() {
+        return zipcode;
+    }
+
+    public void setZipcode(int zipcode) {
+        this.zipcode = zipcode;
+    }
+
+    public Report(String key, String title, String description, double latitude, double longitude, String urlPhoto, int zipcode) {
         this.key = key;
         this.title = title;
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
         this.urlPhoto = urlPhoto;
+        this.zipcode = zipcode;
     }
 
     public String getKey() {
