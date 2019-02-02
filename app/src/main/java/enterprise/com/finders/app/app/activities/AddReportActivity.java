@@ -378,7 +378,8 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
                                 zipCode = 0;
                             }
                             createReport(eventId, title, desc, touchLocation.getLatitude(),
-                                    touchLocation.getLongitude(), filePath.toString(), priority, zipCode, locality);
+                                    touchLocation.getLongitude(), filePath.toString(), priority, zipCode,
+                                    locality, "NOT_FIXED", "");
                             //Toast.makeText(AddReportActivity.this, "Uploaded successfully", Toast.LENGTH_SHORT).show();
                             AddReportActivity.this.runOnUiThread(new Runnable() {
                                 @Override
@@ -423,7 +424,7 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
                                     zipCode = 0;
                                 }
                                 createReport(eventId, title, desc, location.getLatitude(), location.getLongitude(),
-                                        filePath.toString(), priority, zipCode, locality);
+                                        filePath.toString(), priority, zipCode, locality, "NOT_FIXED", "");
                                 Toast.makeText(AddReportActivity.this, "Uploaded successfully", Toast.LENGTH_SHORT).show();
                                 AddReportActivity.this.runOnUiThread(new Runnable() {
                                     @Override
@@ -463,11 +464,13 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void createReport(String key, String title, String description, double latitude, double longitude,
-                              String urlPhoto, double priority, int zipCode, String locality) {
+                              String urlPhoto, double priority, int zipCode, String locality, String status,
+                              String person_reponsible) {
         if (TextUtils.isEmpty(eventId)) {
             eventId = mFirebaseDatabase.push().getKey();
         }
-        Report event = new Report(eventId, title, description, latitude, longitude , urlPhoto, priority, zipCode, locality);
+        Report event = new Report(eventId, title, description, latitude, longitude , urlPhoto, priority,
+                zipCode, locality, status, person_reponsible);
         mFirebaseDatabase.child(eventId).setValue(event);
     }
 

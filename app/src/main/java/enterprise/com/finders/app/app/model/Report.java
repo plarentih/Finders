@@ -16,12 +16,14 @@ public class Report implements Serializable{
     private double priority;
     private int zipCode;
     private String locality;
+    private String status;
+    private String person_reponsible;
 
     public Report() {
     }
 
     public Report(String key, String title, String description, double latitude, double longitude,
-                  String urlPhoto, double priority, int zipCode, String locality) {
+                  String urlPhoto, double priority, int zipCode, String locality, String status, String person_reponsible) {
         this.key = key;
         this.title = title;
         this.description = description;
@@ -31,6 +33,8 @@ public class Report implements Serializable{
         this.priority = priority;
         this.zipCode = zipCode;
         this.locality = locality;
+        this.status = status;
+        this.person_reponsible = person_reponsible;
     }
 
     public String getKey() {
@@ -103,6 +107,22 @@ public class Report implements Serializable{
 
     public void setLocality(String locality) {
         this.locality = locality;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getPerson_reponsible() {
+        return person_reponsible;
+    }
+
+    public void setPerson_reponsible(String person_reponsible) {
+        this.person_reponsible = person_reponsible;
     }
 
     @Override
