@@ -9,6 +9,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -31,6 +33,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.google.android.gms.common.data.DataBufferObserver;
@@ -58,6 +61,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Observable;
 import java.util.UUID;
@@ -76,10 +80,14 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
     private Button saveBtn, uploadBtn, cameraBtn;
     private EditText txtTitle, txtDescription;
     private ProgressBar progressBar;
+    private RatingBar ratingBar;
 
     private String eventId;
     private String title;
     private String desc;
+    private double priority;
+    private int zipCode;
+    private String locality;
 
     private Uri filePath;
     private File file;
@@ -102,6 +110,9 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
 
     public static final int LOCATION_UPDATE_MIN_DISTANCE = 0;
     public static final int LOCATION_UPDATE_MIN_TIME = 0;
+
+    private Geocoder geocoder;
+    List<Address> addresses;
 
     private LocationListener mLocationListener = new LocationListener() {
         @Override
@@ -143,6 +154,8 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
         centerTitle();
         initializeFirebaseComponents();
 
+        geocoder = new Geocoder(this, Locale.getDefault());
+
         mapView = findViewById(R.id.mapViewReport);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
@@ -160,6 +173,7 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
 //        }
 
         getCurrentLocation();
+
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,6 +218,12 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+                priority = rating;
+            }
+        });
 
     }
 
@@ -295,6 +315,7 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
         cameraBtn = findViewById(R.id.buttonCamera);
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
+        ratingBar = findViewById(R.id.ratingBar);
     }
 
     private void initializeFirebaseComponents(){
@@ -317,8 +338,16 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             filePath = taskSnapshot.getDownloadUrl();
+                            try {
+                                addresses = geocoder.getFromLocation(touchLocation.getLatitude(), touchLocation.getLongitude(), 1);
+                                zipCode = Integer.valueOf(addresses.get(0).getPostalCode());
+                                locality = addresses.get(0).getLocality();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                zipCode = 0;
+                            }
                             createReport(eventId, title, desc, touchLocation.getLatitude(),
-                                    touchLocation.getLongitude(), filePath.toString());
+                                    touchLocation.getLongitude(), filePath.toString(), priority, zipCode, locality);
                             //Toast.makeText(AddReportActivity.this, "Uploaded successfully", Toast.LENGTH_SHORT).show();
                             AddReportActivity.this.runOnUiThread(new Runnable() {
                                 @Override
@@ -354,8 +383,16 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 filePath = taskSnapshot.getDownloadUrl();
+                                try {
+                                    addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                                    zipCode = Integer.valueOf(addresses.get(0).getPostalCode());
+                                    locality = addresses.get(0).getLocality();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                    zipCode = 0;
+                                }
                                 createReport(eventId, title, desc, location.getLatitude(), location.getLongitude(),
-                                        filePath.toString());
+                                        filePath.toString(), priority, zipCode, locality);
                                 Toast.makeText(AddReportActivity.this, "Uploaded successfully", Toast.LENGTH_SHORT).show();
                                 AddReportActivity.this.runOnUiThread(new Runnable() {
                                     @Override
@@ -394,11 +431,12 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
-    private void createReport(String key, String title, String description, double latitude, double longitude, String urlPhoto) {
+    private void createReport(String key, String title, String description, double latitude, double longitude,
+                              String urlPhoto, double priority, int zipCode, String locality) {
         if (TextUtils.isEmpty(eventId)) {
             eventId = mFirebaseDatabase.push().getKey();
         }
-        Report event = new Report(eventId, title, description, latitude, longitude , urlPhoto);
+        Report event = new Report(eventId, title, description, latitude, longitude , urlPhoto, priority, zipCode, locality);
         mFirebaseDatabase.child(eventId).setValue(event);
     }
 

@@ -13,27 +13,24 @@ public class Report implements Serializable{
     private double latitude;
     private double longitude;
     private String urlPhoto;
-    private int zipcode;
+    private double priority;
+    private int zipCode;
+    private String locality;
 
     public Report() {
     }
 
-    public int getZipcode() {
-        return zipcode;
-    }
-
-    public void setZipcode(int zipcode) {
-        this.zipcode = zipcode;
-    }
-
-    public Report(String key, String title, String description, double latitude, double longitude, String urlPhoto, int zipcode) {
+    public Report(String key, String title, String description, double latitude, double longitude,
+                  String urlPhoto, double priority, int zipCode, String locality) {
         this.key = key;
         this.title = title;
         this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
         this.urlPhoto = urlPhoto;
-        this.zipcode = zipcode;
+        this.priority = priority;
+        this.zipCode = zipCode;
+        this.locality = locality;
     }
 
     public String getKey() {
@@ -82,6 +79,30 @@ public class Report implements Serializable{
 
     public void setUrlPhoto(String urlPhoto) {
         this.urlPhoto = urlPhoto;
+    }
+
+    public double getPriority() {
+        return priority;
+    }
+
+    public void setPriority(double priority) {
+        this.priority = priority;
+    }
+
+    public int getZipCode() {
+        return zipCode;
+    }
+
+    public void setZipCode(int zipCode) {
+        this.zipCode = zipCode;
+    }
+
+    public String getLocality() {
+        return locality;
+    }
+
+    public void setLocality(String locality) {
+        this.locality = locality;
     }
 
     @Override
