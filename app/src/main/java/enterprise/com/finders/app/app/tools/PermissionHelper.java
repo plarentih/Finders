@@ -14,9 +14,11 @@ import android.support.v4.content.ContextCompat;
 
 public class PermissionHelper {
 
-    public static String[] permissionsRequired = { Manifest.permission.READ_EXTERNAL_STORAGE,
+    private static String[] permissionsRequired = { Manifest.permission.READ_EXTERNAL_STORAGE,
                                                         Manifest.permission.ACCESS_COARSE_LOCATION,
                                                         Manifest.permission.ACCESS_FINE_LOCATION};
+
+    private static String[] readPhoneNumberPermission = { Manifest.permission.READ_PHONE_STATE};
 
     private static String alertTitle = "Attention";
     private static String message = "You can't post a report if you don't give access for location and storage.";
@@ -24,6 +26,16 @@ public class PermissionHelper {
 
     public static boolean checkForPermissions(Activity activity) {
         for (String permission : permissionsRequired) {
+            if (ContextCompat.checkSelfPermission(activity, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean checkForPhoneNumberPermission(Activity activity) {
+        for (String permission : readPhoneNumberPermission) {
             if (ContextCompat.checkSelfPermission(activity, permission)
                     != PackageManager.PERMISSION_GRANTED) {
                 return false;
@@ -43,6 +55,26 @@ public class PermissionHelper {
             }
         });
         builder.setNegativeButton("Later", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                UIHelper.showDialog(activity, alertTitle, message, buttonText, null);
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    public static void askForPhonePermissions(final Activity activity){
+        final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        builder.setTitle("Important message");
+        builder.setMessage("Application can retrieve phone number automatically, without having you to type it. Please grant it.");
+        builder.setPositiveButton("Allow", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                ActivityCompat.requestPermissions(activity, permissionsRequired, 0);
+            }
+        });
+        builder.setNegativeButton("Don't Allow", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 UIHelper.showDialog(activity, alertTitle, message, buttonText, null);

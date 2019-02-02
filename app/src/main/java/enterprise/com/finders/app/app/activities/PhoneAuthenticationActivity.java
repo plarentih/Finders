@@ -1,12 +1,18 @@
 package enterprise.com.finders.app.app.activities;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import enterprise.com.finders.R;
 import enterprise.com.finders.app.app.model.Contact;
+import enterprise.com.finders.app.app.tools.PermissionHelper;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -96,6 +103,11 @@ public class PhoneAuthenticationActivity extends AppCompatActivity implements
             onRestoreInstanceState(savedInstanceState);
         }
 
+//        if(PermissionHelper.checkForPhoneNumberPermission(PhoneAuthenticationActivity.this)){
+//
+//        }else {
+//            PermissionHelper.askForPhonePermissions(PhoneAuthenticationActivity.this);
+//        }
 
 
         // Assign views
@@ -396,7 +408,17 @@ public class PhoneAuthenticationActivity extends AppCompatActivity implements
         }
     }
 
+
     private boolean validatePhoneNumber() {
+//        String phoneNumber = "";
+//        if(PermissionHelper.checkForPhoneNumberPermission(PhoneAuthenticationActivity.this)){
+//            TelephonyManager telephonyManager = (TelephonyManager)getApplication().getSystemService(Context.TELEPHONY_SERVICE);
+//            phoneNumber = telephonyManager.getLine1Number();
+//            mPhoneNumberField.setText(phoneNumber, TextView.BufferType.EDITABLE);
+//        }else {
+//            phoneNumber = mPhoneNumberField.getText().toString();
+//        }
+
         String phoneNumber = mPhoneNumberField.getText().toString();
         if (TextUtils.isEmpty(phoneNumber)) {
             mPhoneNumberField.setError("Invalid phone number.");

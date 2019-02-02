@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="planets_array">
+        <item>Natural disaster</item>
+        <item>Damages in road</item>
+        <item>Vandalism</item>
+        <item>Damages in public place</item>
+    </string-array>
+</resources>

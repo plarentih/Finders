@@ -1,7 +1,9 @@
 package enterprise.com.finders.app.app.activities;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.v7.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
@@ -15,7 +17,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
@@ -32,11 +33,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.data.DataBufferObserver;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -44,10 +46,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -62,15 +62,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Observable;
-import java.util.UUID;
 
 import enterprise.com.finders.R;
 import enterprise.com.finders.app.app.model.Report;
 import enterprise.com.finders.app.app.retro.VisionTest;
 import enterprise.com.finders.app.app.tools.PermissionHelper;
-import enterprise.com.finders.app.app.tools.UIHelper;
 
 public class AddReportActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -78,7 +74,8 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
     private MapView mapView;
 
     private Button saveBtn, uploadBtn, cameraBtn;
-    private EditText txtTitle, txtDescription;
+    private EditText txtDescription;
+    private TextView txtTitle, type_txt_result;
     private ProgressBar progressBar;
     private RatingBar ratingBar;
 
@@ -179,7 +176,6 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onClick(View view) {
                 if(PermissionHelper.checkForPermissions(AddReportActivity.this)){
-                    title = txtTitle.getText().toString();
                     desc = txtDescription.getText().toString();
 
                     if(TextUtils.isEmpty(txtTitle.getText().toString().trim())){
@@ -225,6 +221,40 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
+        final String [] types_array = {"Natural disaster", "Damages in road", "Vandalism", "Damages in public place"};
+
+        txtTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(AddReportActivity.this, R.style.AppCompatAlertDialogStyle);
+                builder.setTitle("Type of damage")
+                        .setItems(types_array, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which){
+                                    case 0:
+                                        title = "Natural disaster";
+                                        type_txt_result.setText(title);
+                                        break;
+                                    case 1:
+                                        title = "Damages in road";
+                                        type_txt_result.setText(title);
+                                        break;
+                                    case 2:
+                                        title = "Vandalism";
+                                        type_txt_result.setText(title);
+                                        break;
+                                    case 3:
+                                        title = "Damages in public place";
+                                        type_txt_result.setText(title);
+                                        break;
+                                }
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alert =  builder.create();
+                alert.show();
+            }
+        });
     }
 
     private void dispatchTakePictureIntent() {
@@ -309,6 +339,7 @@ public class AddReportActivity extends AppCompatActivity implements OnMapReadyCa
 
     private void initializeWidgets(){
         txtTitle = findViewById(R.id.field_title);
+        type_txt_result = findViewById(R.id.type_txt_result);
         txtDescription = findViewById(R.id.field_description);
         saveBtn = findViewById(R.id.buttonSave);
         uploadBtn = findViewById(R.id.buttonUpload);
