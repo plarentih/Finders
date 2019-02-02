@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "683898973631",
+    "firebase_url": "https://finders-f42b0.firebaseio.com",
+    "project_id": "finders-f42b0",
+    "storage_bucket": "finders-f42b0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683898973631:android:a8e52bab9f7e9159",
+        "android_client_info": {
+          "package_name": "enterprise.com.finders.app.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683898973631-it3hcs0stqmrbbraeqccruu9nm0rinth.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "enterprise.com.finders.app.app",
+            "certificate_hash": "008f29173cdcdec3709f2134d7262fc5c2eb7c94"
+          }
+        },
+        {
+          "client_id": "683898973631-q1j361vr9l0fq1qns8iaduhusegsneoh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "enterprise.com.finders.app.app",
+            "certificate_hash": "1940753200b82beb0868011c41b48cca6ffa959e"
+          }
+        },
+        {
+          "client_id": "683898973631-ejc5ukc33e90jtengb70rcqp7ac3ro5f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_cgp-EDrCkVNsUhp7s-ogos7XUkfESk0"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683898973631-ejc5ukc33e90jtengb70rcqp7ac3ro5f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
